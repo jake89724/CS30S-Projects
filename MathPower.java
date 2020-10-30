@@ -14,10 +14,25 @@ public class MathPower {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String userInput = JOptionPane.showInputDialog("What do you want to do?");
-        if (userInput.equals("a")) {
-            addition(1);
+        int level = 1;
+        direction(1);
+    }
+    
+    public static void direction(int level){
+        boolean stop = false;
+        int addPoints = 0;
+        while (stop == false){
+           String userInput = JOptionPane.showInputDialog("(Level " + level + ")"
+        + "\n Addition = 1 " + addPoints + "/100" 
+        + "\n Subtraction = 2"
+        + "\n multiplication = 3"
+        + "\n Division = 4");
+        int direction = Integer.parseInt(userInput);
+        if (direction == 1){
+            addPoints = addition(level);
+        } 
         }
+        
     }
 
     // returns random number
@@ -29,7 +44,7 @@ public class MathPower {
         return (randomNumber);
     }
 
-    public static void addition(int level) {
+    public static int addition(int level) {
         // this is for addition questions
 
         int low = 0;
@@ -40,13 +55,14 @@ public class MathPower {
             high = 100;
             low = 1;
         }
-
+        
+      
         // this is for 10 seperate questions
         for (int i = 0; i < 10; i++) {
             /**
              * stop is for the loop to keep going until specific question is
              * passed or failed
-            *
+             *
              */
             boolean stop = false;
             // to calulate points
@@ -70,35 +86,44 @@ public class MathPower {
                 int userAnswer = Integer.parseInt(userInput);
                 counter++;
                 //checks answer
+
                 if (userAnswer == sum) {
+                    if (counter == 1) {
+                        points = points + 10;
+                    } else if (counter == 2) {
+                        points = points + 5;
+                    } else {
+                        points = points + 2;
+                    }
+                    System.out.println("points = " + points);
+
                     JOptionPane.showMessageDialog(null,
                             "Congrats You Got it On Your "
                             + counter
-                            + " Try!");
+                            + " Try!"
+                            + "\n points = " + points + "/100");
                     stop = true;
                 } else {
                     JOptionPane.showMessageDialog(null, "Wrong, Try Again");
                     System.out.println("Wrong: Try Again");
-                }
-                if (counter > 3) {
-                    JOptionPane.showMessageDialog(null, "U Failed Loser");
-                    stop = true;
+
+                    if (counter >= 3) {
+                        JOptionPane.showMessageDialog(null, "U Failed Loser (points = " + points + ")");
+                        stop = true;
+                    }
+
                 }
 
-            }
-
-            // for points
-            if (counter == 1) {
-                points = points + 10;
-            } else if (counter == 2) {
-                points = points + 5;
-            } else {
-                points = points + 2;
             }
             System.out.println("points = " + points);
 
         }
-
+        if (points >= 100) {
+            System.out.println("U going to next level nice");
+            level++;
+        }
+        return (points);
+        // ///////////////////////////////
     }
 
 }
