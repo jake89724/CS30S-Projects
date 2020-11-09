@@ -1,19 +1,15 @@
-package odd.even.game;
+
+package oddevengame;
 
 import javax.swing.JOptionPane;
 
-/**
- * OddEvenGame.java - description
- *
- * @author Jacob Head
- * @since Nov. 3, 2020
- */
 public class OddEvenGame {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // shows rules
         JOptionPane.showMessageDialog(null, "Rules! "
                 + "\n -You have $1000 to start"
                 + "\n -You can place a bet less than the money you have"
@@ -25,85 +21,131 @@ public class OddEvenGame {
         bet(1000);
     }
 
+    /**
+     * makes bet + game loop
+     * @param money the total money you have
+     */
     public static void bet(int money) {
-        boolean valid = false;
-        int max = money;
-        int low = 1;
         int betMoney = 0;
+        int totalMoney = 0;
+        int resultMoney = 0;
         boolean stop = false;
-        while (stop == false){
-          while (valid == false){
-            try{
-                System.out.println("Wwe made it");
-                String checkBet = JOptionPane.showInputDialog("You have $"
-                    + money
-                    + "\n Place Bet");
-            if(checkBet == null) endGame();
-            betMoney = Integer.parseInt(checkBet);
-            if(betMoney >= low && betMoney <= max){
-                valid = true;
+        // stop = main game loop
+        while (stop == false) {
+
+            boolean valid = false;
+            //valid for determining if user input is valid
+            while (valid == false) {
+                if (money == 0) {
+                    JOptionPane.showMessageDialog(null, "Out Of Money :(",
+                            "No Money Left",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    endGame();
+                }
+
+                try {
+                    //asks for bet
+                    String checkBet = JOptionPane.showInputDialog(null, 
+                            "You have $"
+                            + money
+                            + "\n Place Bet", "Enter Bet", 
+                            JOptionPane.QUESTION_MESSAGE
+                            );
+                    if (checkBet == null) endGame();
+                    //converts to int
+                    betMoney = Integer.parseInt(checkBet);
+                    //figures out if bet is valid 
+                    int max = money;
+                    int low = 1;
+                    if (betMoney >= low && betMoney <= max) {
+                        valid = true;
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "Please enter a valid number",
+                                "Number Not Valid",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,
+                            "Please Enter A Valid Bet",
+                            "No Letters", JOptionPane.INFORMATION_MESSAGE
+                            );
+                }
             }
-            else {
-                JOptionPane.showMessageDialog(null, "Please enter a valid number");
+
+            resultMoney = game(betMoney);
+            //calculates total money
+            if (resultMoney > betMoney) {
+                money = money + resultMoney;
+            } else {
+                money = money - betMoney;
             }
-            } catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Please Enter A Valid Bet");
-            }
-        }
-          
-        money = game(betMoney);
             System.out.println("play again confirmed");
-        }   
+        }
     }
 
-     private static int random() {
+    /**
+     * generates random number
+     * @return returns int 1 - 6
+     */
+    private static int random() {
         final int high = 6;
         final int low = 1;
         double seed = Math.random();
         double number = (high - low + 1) * seed + low;
         int randomNumber = (int) number;
         System.out.println(randomNumber);
-        return(randomNumber);
+        return (randomNumber);
     }
-     
+
+    /**
+     * determines if odd or even and calculates prize
+     * @param betMoney the amount the user bets
+     * @return the result of prize money
+     */
     private static int game(int betMoney) {
-        int afterBetResult = betMoney;
         int sum = random() + random();
         boolean even = false;
-        boolean odd = false;
         int totalBet = 0;
         //checks if even
         if (sum == 2 || sum == 4 || sum == 6
                 || sum == 8 || sum == 10
-                || sum == 12) even = true;
-        
+                || sum == 12) {
+            even = true;
+        }
+        // outputs result and calculates prize money
         if (even == true) {
             totalBet = 0;
             JOptionPane.showMessageDialog(null, "The Result Was Even "
-            + "(" + sum + ")" + "\n You Lost....."
+                    + "(" + sum + ")" + "\n You Lost....."
                     + " you lost the money you bet..", "LOSER",
                     JOptionPane.INFORMATION_MESSAGE);
-        }
-        else {
+        } else {
             totalBet = betMoney * 2;
             JOptionPane.showMessageDialog(null, "The Result Was Odd! "
-            + "(" + sum + ")" + "\n You Won " + betMoney + "(2) "
+                    + "(" + sum + ")" + "\n You Won " + betMoney + "(2) "
                     + "= $" + totalBet, "WINNER",
-                    JOptionPane.INFORMATION_MESSAGE);   
+                    JOptionPane.INFORMATION_MESSAGE);
         }
-        
+
         int playAgain = JOptionPane.showConfirmDialog(null,
                 "Wanna Play Again?",
                 "Play Again?",
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         System.out.println(playAgain);
-        if (playAgain != 0)endGame();       
-        
-        return(totalBet);
-        
+        // if user does not want to play again close program
+        if (playAgain != 0) {
+            endGame();
+        }
+
+        return (totalBet);
+
     }
 
+    /**
+     * probably the longest method ever written (closes program)
+     */
     private static void endGame() {
         System.exit(0);
     }
