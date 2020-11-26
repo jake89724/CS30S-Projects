@@ -1,5 +1,7 @@
 package hiddenprize;
 
+import javax.swing.JOptionPane;
+
 /**
  * HiddenPrize.java - guessing game
  *
@@ -9,6 +11,7 @@ package hiddenprize;
 public class HiddenPrize {
 
     static int[][] board = new int[4][5];
+
     /**
      * @param args the command line arguments
      */
@@ -26,14 +29,14 @@ public class HiddenPrize {
         int row1 = 0;
         int column1 = 0;
         //draw board
-        
+
         //set all places to 0
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
                 board[i][j] = NULL;
             }
         }
-        
+
         // set coords
         column = random(0, 4);
         row = random(0, 3);
@@ -43,10 +46,10 @@ public class HiddenPrize {
             column1 = random(0, 4);
             row1 = random(0, 3);
         } while (column1 == column || row == row1);
-        
+
         board[row1][column1] = UTER;
         ////////////////////////////////////
-        
+
         //out coords
         outputArray(board);
     }
@@ -58,8 +61,8 @@ public class HiddenPrize {
         return (randomNumber);
     }
 
-    private static void outputArray(int [][] board) {
-         for (int i = 0; i < board.length; i++) {
+    private static void outputArray(int[][] board) {
+        for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
                 System.out.print(board[i][j]);
             }
@@ -69,10 +72,28 @@ public class HiddenPrize {
 
     private static void game() {
         //while(true){
-            // game loop here ADD STUFF PLZ
+        // game loop here ADD STUFF PLZ
         //}
+        String row1 = "";
+        String row2 = "";
+        String row3 = "";
+        String row4 = "";
+        int [][] output = new int [4][5];
+        for (int i = 0; i < output[0].length; i++) {
+            output[0][i] = 0;
+            row1 = row1 + "  "+ output[0][i]+ "  |";
+        }
+        row2 = row1;
+        row3 = row2;
+        row4 = row3;
+        
+        JOptionPane.showInputDialog(
+                "      C1 | C2 | C3 | C4 | C5"
+                + "\nR1|" + row1
+                + "\nR2|" + row2
+                + "\nR3|" + row3
+                + "\nR4|" + row4);
         System.out.println("Made it to game loop epic");
     }
-    
 
 }
