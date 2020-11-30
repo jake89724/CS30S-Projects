@@ -1,29 +1,33 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package hiddenprize;
 
 import javax.swing.JOptionPane;
 
 /**
- * HiddenPrize.java - guessing game
  *
- * @author Jacob Head
- * @since Nov. 18, 2020
+ * @author lazyf
  */
 public class HiddenPrize {
 
     static int[][] board = new int[4][5];
-
+    static final int COMP = 1;
+    static final int UTER = 2;
+    static final int NULL = 0;
+    static int tracker = 0;
+    static int tries = 0;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         drawArray();
-        game();
+        output();
     }
 
     private static void drawArray() {
-        final int COMP = 1;
-        final int UTER = 2;
-        final int NULL = 0;
         int row = 0;
         int column = 0;
         int row1 = 0;
@@ -70,30 +74,93 @@ public class HiddenPrize {
         }
     }
 
-    private static void game() {
-        //while(true){
-        // game loop here ADD STUFF PLZ
-        //}
-        String row1 = "";
-        String row2 = "";
-        String row3 = "";
-        String row4 = "";
-        int [][] output = new int [4][5];
-        for (int i = 0; i < output[0].length; i++) {
-            output[0][i] = 0;
-            row1 = row1 + "  "+ output[0][i]+ "  |";
+    private static void output() {
+        int[][] output = new int[4][5];
+        equateToZero(output);
+        int counter = 10;
+        while (true) {
+            String row1 = "";
+            String row2 = "";
+            String row3 = "";
+            String row4 = "";
+            for (int i = 0; i < output[0].length; i++) {
+                row1 = row1 + "  " + output[0][i] + "  |";
+                row2 = row2 + "  " + output[1][i] + "  |";
+                row3 = row3 + "  " + output[2][i] + "  |";
+                row4 = row4 + "  " + output[3][i] + "  |";
+            }
+            String checkUserInput = JOptionPane.showInputDialog(
+                    "      C1 | C2 | C3 | C4 | C5"
+                    + "\nR1|" + row1
+                    + "\nR2|" + row2 + "      1 = COMP"
+                    + "\nR3|" + row3 + "      2 = Uter"
+                    + "\nR4|" + row4 + "      5 = Nothing" + "\n "
+                            + "\nYou Have | " + counter + " | Guesses Left\n"
+                    + "-----------------------------------------------------"
+                    + "\n| Enter:                               |"
+                    + "\n|  -1 to make a guess     |"
+                    + "\n|  -2 to start new game  |"
+                    + "\n|  -3 to quit                         |\n\n");
+            int userInput = Integer.parseInt(checkUserInput);
+            if (userInput == 1) {
+                output = guess(output);
+                counter--;
+            } else if (userInput == 2) {
+                equateToZero(output);
+                drawArray();
+                tracker = 0;
+                counter = 10;
+            } else {
+                System.exit(0);
+            }
+            if (tracker == 2){
+                equateToZero(output);
+                drawArray();
+                tracker = 0;
+                JOptionPane.showMessageDialog(null, "Congrats you won after "
+                        + tries + "Attempts!");
+                tries = 0;
+                counter = 10;
+            }
+            if (counter <= 0) {
+                JOptionPane.showMessageDialog(null, "Sorry Out Of guesses");
+                equateToZero(output);
+                drawArray();
+                tracker = 0;
+                counter = 10;
+            }
         }
-        row2 = row1;
-        row3 = row2;
-        row4 = row3;
+    }
+
+    public static void equateToZero(int[][] output) {
+        for (int i = 0; i < output.length; i++) {
+            for (int j = 0; j < output[0].length; j++) {
+                output[i][j] = 0;
+            }
+        }
+    }
+
+
+    public static int[][] guess(int[][] output) {
+        String row = JOptionPane.showInputDialog("Enter Row (1-4)");
+        String col = JOptionPane.showInputDialog("Enter Col (1-5)");
+        int mainRow = Integer.parseInt(row) - 1;
+        int mainCol = Integer.parseInt(col) - 1;
+        if (board[mainRow][mainCol] == NULL) {
+            System.out.println("Nothing");
+            output[mainRow][mainCol] = 5;
+        } else if (board[mainRow][mainCol] == COMP) {
+            tracker++;
+            System.out.println("1 or COMP");
+            output[mainRow][mainCol] = COMP;
+        } else if (board[mainRow][mainCol] == UTER) {
+            tracker++;
+            System.out.println("2 or Uter");
+            output[mainRow][mainCol] = UTER;
+        }
         
-        JOptionPane.showInputDialog(
-                "      C1 | C2 | C3 | C4 | C5"
-                + "\nR1|" + row1
-                + "\nR2|" + row2
-                + "\nR3|" + row3
-                + "\nR4|" + row4);
-        System.out.println("Made it to game loop epic");
+        tries++;
+        return output;
     }
 
 }
